@@ -5,9 +5,10 @@ var http = require('http');
 
 //------------------------------------------------------------------------
 // External dependencies
-var express         = require('express');
-var bodyParser      = require('body-parser');
-var morgan          = require('morgan');
+var express             = require('express');
+var bodyParser          = require('body-parser');
+var morgan              = require('morgan');
+var expressValidator    = require('express-validator');
 
 //------------------------------------------------------------------------
 // Express app
@@ -20,7 +21,7 @@ global.App = {
     eapp:    app,
     env:    process.env.NODE_ENV || 'production',
     port:   process.env.PORT || 1337
-}
+};
 
 //------------------------------------------------------------------------
 // App configurations
@@ -28,6 +29,7 @@ App.database        = Utils.getConfig('database');
 App.routing         = Utils.getConfig('routing');
 App.errorHandling   = Utils.getConfig('errorHandling');
 App.authentication  = Utils.getConfig('authentication');
+App.validation      = Utils.getConfig('validation');
 
 //------------------------------------------------------------------------
 //Express Middlewares stack
@@ -35,8 +37,8 @@ app.use(morgan('dev'));
 app.use(express.static(path.join(Utils.root_path, 'public', 'build')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(expressValidator(App.validation));
 app.use(App.authentication.verifyAPIKey);
-/*app.use(validator());*/
 app.use(App.routing.appRouter);
 app.use(App.errorHandling.handler);
 

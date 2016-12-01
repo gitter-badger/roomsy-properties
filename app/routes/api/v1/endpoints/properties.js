@@ -8,20 +8,13 @@ var Property = Utils.getModel('Property');
 
 //------------------------------------------------------------------------
 // Validator
-var propertiesValidator = Utils.getValidator('properties');
+var validator = Utils.getValidator('properties');
 
 //------------------------------------------------------------------------
 // API paths
 
-/**
- * Get user associated properties
- * @param {object} req.query
- * @param {id} req.query.userId
- */
-propertiesRouter.get('/', (req, res, next) => {
-
-    var validationErrors = propertiesValidator.validateGetAssociatedPropertiesParams(req.query);
-    if (validationErrors.length !== 0) return res.status(400).json({message: 'validation error', error: validationErrors});
+// Get properties
+propertiesRouter.get('/', validator.validateGetRequest, (req, res, next) => {
 
     Property
         .find({
@@ -38,13 +31,8 @@ propertiesRouter.get('/', (req, res, next) => {
         });
 });
 
-/**
- * Create new property
- * @param {object} req.body
- * @param {id} req.body.userId
- * @param {object} req.body.propertyParams
- */
-propertiesRouter.post('/', (req, res, next) => {
+// Create new properties
+propertiesRouter.post('/', validator.validatePostRequest, (req, res, next) => {
 
     var property = new Property(req.body);
     property.save((err) => {
@@ -55,10 +43,26 @@ propertiesRouter.post('/', (req, res, next) => {
 });
 
 /**
+ * Update property
+ */
+propertiesRouter.put('/:propertyId', validator.validatePutRequest, (req, res, next) => {
+    Property
+        .findById(req.params.propertyId)
+        .exec((err, property) => {
+            
+            if (err) return next(err);
+            if (!property) return res.status(404).json({message: 'can\'t find any property by provided id'});
+            
+            Object.assign(property, req.body);
+            property.save((err) => { 
+                if (err) return next(err);
+                res.status(200).json({propertyId: property._id});
+            });
+        });
+});
+
+/**
  * Get relationship with a user
- * @param {object} req.body
- * @param {id} req.body.userId
- * @param {object} req.body.propertyParams
  */
 propertiesRouter.get('/:propertyId/user/:userId/relationship', (req, res, next) => {
     Property

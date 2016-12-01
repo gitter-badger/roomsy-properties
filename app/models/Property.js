@@ -16,9 +16,9 @@ var propertySchema = mongoose.Schema({
     website         : { type: String },
 
     
-    owner           : { type: mongoose.SchemaTypes.ObjectId, required: true },
+    owner           : { type: String, required: true },
     employees       : [
-        { type: mongoose.SchemaTypes.ObjectId, required: true }
+        { type: String, required: true }
     ]
     // _relationship   : { type: mongoose.SchemaTypes.ObjectId, required: true, ref: 'Relationship' }
 });

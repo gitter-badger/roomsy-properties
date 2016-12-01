@@ -6,7 +6,7 @@ var auth = Utils.getConfig('authentication');
 
 //------------------------------------------------------------------------
 var appRouter = express.Router();
-appRouter.use('/api', auth.authenticate, apiRouter);
+appRouter.use('/api', apiRouter);
 
 //------------------------------------------------------------------------
 var configObject = {

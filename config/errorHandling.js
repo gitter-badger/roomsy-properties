@@ -5,7 +5,8 @@ var configObject = {
 
 		console.log(err);
 		res.status(500).json({
-	        msg: "Unhandled error",
+			status: 'error',
+	        message: 'Unhandled error',
 	        error: err
 	    });
 	}

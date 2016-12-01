@@ -16,6 +16,7 @@ global.Utils = require('./utilities');
 global.Configs = {
     env             : process.env.NODE_ENV,
     port            : process.env.PORT,
+    apiKey          : process.env.API_KEY,
     databaseUrl     : process.env.DATABASE_URL
 };
 global.App = {

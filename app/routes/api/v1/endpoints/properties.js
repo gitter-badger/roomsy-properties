@@ -1,3 +1,4 @@
+var async = require('async');
 var express = require('express');
 var propertiesRouter = express.Router();
 
@@ -7,40 +8,59 @@ var Property = Utils.getModel('Property');
 
 //------------------------------------------------------------------------
 // Configurations
-var auth = Utils.getConfig('authentication');
+var auth = Utils.getConfig('authentication')
+var relationsService = Utils.getService('relations');
 
 //------------------------------------------------------------------------
 // API paths
-propertiesRouter.get('/', auth.verifyAuthorization, (req, res, next) => {
-    
-    var authInfo = req.authInfo;
+
+/**
+ * Get user associated properties
+ * @param {object} req.body
+ * @param {id} req.body.userId
+ */
+propertiesRouter.get('/', (req, res, next) => {
 
     Property
-        .find({accountId: authInfo.account._id})
-        .exec((err, properties) => {
-
-            if (err) return next(err);
+        .find({owner: req.body.userId})
+        .exec((err, property) => {  
             
-            res.status(200).json({status: 200, message: 'ok', results: {count: properties.length, properties: properties}});
+            if (err) return next(err);
+            if (!property) return res.status(404).json({message: 'can\'t find any properties with associated user'});
+            res.status(200).json({message: 'ok', property: property});
         });
-})
+});
 
-propertiesRouter.post('/', auth.verifyAuthorization, (req, res, next) => {
+/**
+ * Create new property
+ * @param {object} req.body
+ * @param {id} req.body.userId
+ * @param {object} req.body.propertyParams
+ */
+propertiesRouter.post('/', (req, res, next) => {
 
-    var authInfo = req.authInfo;
-
-    var property = new Property({
-        name: req.body.name,
-        region: req.body.region,
-        pricingPlan: req.body.pricingPlan,
-        accountId: authInfo.account._id
-    });
-
+    var property = new Property(req.body);
     property.save((err) => {
 
         if (err) return next(err);
-        res.status(200).json({status: 200, message: 'ok', result: {propertyId: property._id}});
+        res.status(200).json({message: 'ok', propertyId: property._id});
     });
+});
+
+propertiesRouter.get('/:propertyId/user/:userId/relationship', (req, res, next) => {
+    Property
+        .findById(req.params.propertyId)
+        .exec((err, property) => {
+
+            if (err) return next(err);
+            if (!property) return res.status(404).json({message: 'can\'t find any property by provided id'});
+            if (property.owner == req.params.userId)
+                return res.status(200).json({relatioship: 'owner'});
+            if (property.employees.includes(req.params.userId))
+                return res.status(200).json({relationship: 'employee'});
+            
+            res.status(200).json({relationship: false});
+        });
 });
 
 //------------------------------------------------------------------------

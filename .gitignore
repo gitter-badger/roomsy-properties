@@ -38,6 +38,3 @@ jspm_packages
 
 # Gulp build directory
 public/build
-
-# Secrets
-secrets.js

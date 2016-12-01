@@ -1,26 +1,26 @@
 var mongoose = require('mongoose');
-var bcrypt = require('bcryptjs');
-
-//------------------------------------------------------------------------
-// Reference Schema
-
-//------------------------------------------------------------------------
-// Validator
-// var validator = Utils.getValidator('booking');
 
 //------------------------------------------------------------------------
 // Schema definition
 var propertySchema = mongoose.Schema({
 
+    name            : { type: String, required: true },
+    numberOfRooms   : { type: Number, required: true },
     region          : { type: String, required: true, default: 'North America' },
-    pricingPlan     : { type: String, required: true, default: 'Basic' },
+    address         : { type: String },
+    city            : { type: String },
+    postalCode      : { type: String },
+    phoneNumber     : { type: String },
+    fax             : { type: String },
+    email           : { type: String },
+    website         : { type: String },
 
-    //========================================================================
-    accountId       : { type: mongoose.Schema.Types.ObjectId, required: true }
-}, 
-//Schema optioms
-{
-	timestamps: true
+    
+    owner           : { type: mongoose.SchemaTypes.ObjectId, required: true },
+    employees       : [
+        { type: mongoose.SchemaTypes.ObjectId, required: true }
+    ]
+    // _relationship   : { type: mongoose.SchemaTypes.ObjectId, required: true, ref: 'Relationship' }
 });
 
 //------------------------------------------------------------------------
@@ -31,4 +31,4 @@ var propertySchema = mongoose.Schema({
 module.exports = {
     Schema: propertySchema,
     Model: mongoose.model('Property', propertySchema)
-}
+};

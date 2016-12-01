@@ -2,6 +2,9 @@
   "name": "roomsy-properties",
   "version": "1.0.0",
   "description": "roomsy-properties service",
+  "engines": {
+    "node": "6.9.x"
+  },
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

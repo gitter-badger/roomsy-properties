@@ -7,3 +7,5 @@ cache:
 notifications:
   email: false
   slack: rocketspacer:ApRNr4m9mSy8xOlzjFjepTx5#roomsy-properties
+services:
+  - mongodb

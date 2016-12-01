@@ -42,9 +42,7 @@ propertiesRouter.post('/', validator.validatePostRequest, (req, res, next) => {
     });
 });
 
-/**
- * Update property
- */
+// Update property
 propertiesRouter.put('/:propertyId', validator.validatePutRequest, (req, res, next) => {
     Property
         .findById(req.params.propertyId)
@@ -58,25 +56,6 @@ propertiesRouter.put('/:propertyId', validator.validatePutRequest, (req, res, ne
                 if (err) return next(err);
                 res.status(200).json({propertyId: property._id});
             });
-        });
-});
-
-/**
- * Get relationship with a user
- */
-propertiesRouter.get('/:propertyId/user/:userId/relationship', (req, res, next) => {
-    Property
-        .findById(req.params.propertyId)
-        .exec((err, property) => {
-
-            if (err) return next(err);
-            if (!property) return res.status(404).json({message: 'can\'t find any property by provided id'});
-            if (property.owner == req.params.userId)
-                return res.status(200).json({relatioship: 'owner'});
-            if (property.employees.includes(req.params.userId))
-                return res.status(200).json({relationship: 'employee'});
-            
-            res.status(200).json({relationship: false});
         });
 });
 

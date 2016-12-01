@@ -1,0 +1,8 @@
+language: node_js
+node_js:
+- 6
+cache:
+  directories:
+  - node_modules
+notifications:
+  slack: rocketspacer:ApRNr4m9mSy8xOlzjFjepTx5#roomsy-properties

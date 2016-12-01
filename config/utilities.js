@@ -15,12 +15,6 @@ module.exports = {
             );
     },
 
-    getSecret: function() {
-        return require(
-            path.join(this.root_path, 'secrets')
-        );
-    },
-
     getModel: function(modelName) { //require the model in 'app/models'
         return require(
             this.app_path(
@@ -40,5 +34,12 @@ module.exports = {
             this.app_path(
                 path.join('routes', routeName)
             ));
+    },
+
+    getValidator: function (validatorName) {  
+        return require(
+            this.app_path(
+                path.join('validators', validatorName)
+            ));
     }
-}
+};

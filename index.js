@@ -1,5 +1,5 @@
+if (!process.env.NODE_ENV)      process.env.NODE_ENV = 'DEVELOPMENT';
+if (!process.env.PORT)          process.env.PORT = 1337;
+if (!process.env.DATABASE_URL)  process.env.DATABASE_URL = 'mongodb://localhost/properties-db';
+
 require('./config/application').start();
-// var query = Buffer.from(JSON.stringify({name: "Tuấn Nguyễn"})).toString('base64');
-// var parsed = 
-// console.log(query);
-// console.log(parsed);

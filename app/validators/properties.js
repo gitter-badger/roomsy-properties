@@ -11,7 +11,7 @@ var PROPERTY_VALIDATION_SCHEMA = {
     'website'           : { optional: true },
 
     'owner'             : { notEmpty: true, isMongoId: true },
-    'employees'         : { optional: true }
+    'employees'         : { optional: true, isArray: true, eachNotEmpty: true }
 };
 
 

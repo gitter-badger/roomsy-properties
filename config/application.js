@@ -11,28 +11,25 @@ var morgan              = require('morgan');
 var expressValidator    = require('express-validator');
 
 //------------------------------------------------------------------------
-// Express app
-var app = express();
-
-//------------------------------------------------------------------------
-// Basic configurations
+// Configurations
 global.Utils = require('./utilities');
+global.Configs = {
+    env             : process.env.NODE_ENV,
+    port            : process.env.PORT,
+    databaseUrl     : process.env.DATABASE_URL
+};
 global.App = {
-    eapp:    app,
-    env:    process.env.NODE_ENV || 'production',
-    port:   process.env.PORT || 1337
+    expressApp      : express(),
+    database         : Utils.getConfig('database'),
+    routing         : Utils.getConfig('routing'),
+    errorHandling   : Utils.getConfig('errorHandling'),
+    authentication  : Utils.getConfig('authentication'),
+    validation      : Utils.getConfig('validation')
 };
 
 //------------------------------------------------------------------------
-// App configurations
-App.database        = Utils.getConfig('database');
-App.routing         = Utils.getConfig('routing');
-App.errorHandling   = Utils.getConfig('errorHandling');
-App.authentication  = Utils.getConfig('authentication');
-App.validation      = Utils.getConfig('validation');
-
-//------------------------------------------------------------------------
 //Express Middlewares stack
+var app = App.expressApp;
 app.use(morgan('dev'));
 app.use(express.static(path.join(Utils.root_path, 'public', 'build')));
 app.use(bodyParser.json());
@@ -48,11 +45,11 @@ module.exports = {
 
     start: function() {
         App.database.connect((err) => {
-            if (!err) {
-                http.createServer(app).listen(App.port, () => {
-                    console.log('Server listening on port ' + App.port);
-                });
-            }
+            if (err) return;
+
+            http.createServer(App.expressApp).listen(Configs.port, () => {
+                console.log('Server listening on port ' + Configs.port);
+            });
         });
     }
 };

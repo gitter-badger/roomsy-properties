@@ -53,6 +53,7 @@
     "mocha": true,
     "predef": [
       "Utils",
+      "Configs",
       "App"
     ]
   }
